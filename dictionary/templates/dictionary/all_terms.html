@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все термины по алфавиту | Словарь Связиста</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #004080;
+            --secondary: #0066cc;
+            --light: #f0f8ff;
+            --dark: #1a1a2e;
+            --text: #333;
+            --card-bg: white;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --light: #121212;
+            --dark: #0d0d12;
+            --text: #ffffff;
+            --card-bg: #1e1e2f;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--text);
+            transition: background-color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 10px 0 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .alphabet-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 20px;
+        }
+
+        .alphabet-nav a {
+            display: inline-block;
+            padding: 8px 12px;
+            background: var(--secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .alphabet-nav a:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .section {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .letter-section h2 {
+            color: var(--primary);
+            margin-top: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+        }
+
+        .term-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .term-item {
+            background-color: var(--card-bg);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .term-item:hover {
+            transform: translateX(5px);
+        }
+
+        .term-item h3 {
+            margin: 0;
+            color: var(--secondary);
+            font-size: 1.2em;
+        }
+
+        .term-item p {
+            margin: 8px 0 0;
+            font-size: 0.95em;
+            color: #666;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 1.1em;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--text);
+            font-size: 0.9em;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: var(--card-bg);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            box-shadow: 0 4px 8px var(--shadow);
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-book"></i> Все термины по алфавиту</h1>
+        <p>Словарь Связиста</p>
+    </div>
+
+    <button class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <a href="/" class="back-link">← На главную</a>
+
+    <div class="alphabet-nav">
+        {% for letter, terms in grouped_terms %}
+            <a href="#{{ letter }}">{{ letter }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        {% for letter, terms in grouped_terms %}
+            <div class="letter-section">
+                <h2 id="{{ letter }}">{{ letter }}</h2>
+                <ul class="term-list">
+                    {% for term in terms %}
+                        <li class="term-item">
+                            <h3>{{ term.word }}</h3>
+                            <p>{{ term.definition|truncatewords:20 }}</p>
+                        </li>
+                    {% empty %}
+                        <li>Нет терминов на эту букву.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="footer">
+        &copy; <span id="current-year">2025</span> Словарь Связиста | Все права защищены
+    </div>
+
+    <script>
+        // Переключение темы
+        const themeToggle = document.getElementById('theme-toggle');
+        const icon = themeToggle.querySelector('i');
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+
+            if (newTheme === 'dark') {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+
+        // Проверка сохранённой темы
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        if (savedTheme === 'dark') {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        // Сохранение темы
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            localStorage.setItem('theme', currentTheme);
+        });
+
+        // Обновляем год в футере
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

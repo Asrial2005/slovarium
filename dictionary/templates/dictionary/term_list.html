@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Словарь Связиста</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #004080;
+            --secondary: #0066cc;
+            --light: #f0f8ff;
+            --dark: #1a1a2e;
+            --text: #333;
+            --card-bg: white;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --light: #121212;
+            --dark: #0d0d12;
+            --text: #ffffff;
+            --card-bg: #1e1e2f;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--text);
+            transition: background-color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 10px 0 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .search-container {
+            text-align: center;
+            margin: 30px auto;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .search-box {
+            width: 70%;
+            max-width: 500px;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid var(--secondary);
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+            background-color: var(--card-bg);
+        }
+
+        .search-box:focus {
+            box-shadow: 0 0 15px rgba(0, 102, 204, 0.3);
+            border-color: var(--primary);
+        }
+
+        .search-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+
+        .search-button:hover {
+            background: linear-gradient(135deg, #003366, #0052a3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px var(--shadow);
+        }
+
+        .results {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .term-item {
+            background-color: var(--card-bg);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+
+        .term-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        .term-item h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary);
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+        }
+
+        .term-item h3 i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .term-item p {
+            margin: 0;
+            line-height: 1.6;
+            font-size: 1.1em;
+        }
+
+        .term-media {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .term-media img, .term-media video {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+
+        .term-media video {
+            height: auto;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--text);
+            font-size: 0.9em;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: var(--card-bg);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            box-shadow: 0 4px 8px var(--shadow);
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .search-box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .search-button {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+    <div class="header">
+    <h1><i class="fas fa-book-open"></i> Словарь Связиста</h1>
+    <p>Термины и определения в области связи</p>
+    <a href="/all-terms/" style="color: white; text-decoration: underline;">Все термины по алфавиту</a>
+</div>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-book-open"></i> Словарь Связиста</h1>
+        <p>Термины и определения в области связи</p>
+    </div>
+
+    <button class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="search-container">
+        <input type="text" id="search-input" class="search-box" placeholder="Введите термин...">
+        <button id="search-button" class="search-button"><i class="fas fa-search"></i> Поиск</button>
+    </div>
+
+    <div id="results" class="results"></div>
+
+
+<script>
+    const static_url = '/static/';
+</script>
+    <script>
+        document.getElementById('search-button').onclick = function() {
+            const query = document.getElementById('search-input').value;
+
+            fetch(`/search/?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    let html = '';
+                    if (data.terms.length > 0) {
+                        data.terms.forEach(term => {
+                            html += `
+                                <div class="term-item">
+                                    <h3><i class="fas fa-tag"></i> ${term.word}</h3>
+                                    <p>${term.definition}</p>
+                                    <div class="term-media">
+                            `;
+
+                           if (term.image_path) {
+    html += `<img src="/static/images/${term.image_path}" alt="${term.word}">`;
+}
+
+                            if (term.video_path) {
+                             html += `<video controls><source src="${static_url}videos/${term.video_path}" type="video/mp4">Ваш браузер не поддерживает видео.</video>`;
+                                }
+
+                            html += `
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        html = '<p style="text-align: center; padding: 20px; font-size: 1.2em;">🔍 Термины не найдены.</p>';
+                    }
+                    document.getElementById('results').innerHTML = html;
+                });
+        };
+
+        // Переключение темы
+        const themeToggle = document.getElementById('theme-toggle');
+        const icon = themeToggle.querySelector('i');
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+
+            if (newTheme === 'dark') {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+
+        // Проверка сохранённой темы
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        if (savedTheme === 'dark') {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        // Сохранение темы
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            localStorage.setItem('theme', currentTheme);
+        });
+    </script>
+</body>
+</html>

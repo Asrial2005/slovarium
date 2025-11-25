@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ term.word }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .term-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .term-media {
+            margin-top: 20px;
+        }
+        .term-media img, .term-media video {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        a {
+            color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="term-container">
+        <h1>{{ term.word }}</h1>
+        <p>{{ term.definition }}</p>
+
+        <div class="term-media">
+            {% if term.image %}
+                <img src="{{ term.image.url }}" alt="{{ term.word }}">
+            {% endif %}
+
+            {% if term.video %}
+                <video controls>
+                    <source src="{{ term.video.url }}" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            {% endif %}
+        </div>
+
+        <p><a href="{% url 'term_list' %}">← Назад к списку</a></p>
+    </div>
+</body>
+</html>
